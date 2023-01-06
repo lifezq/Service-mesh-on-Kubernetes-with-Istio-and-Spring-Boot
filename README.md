@@ -9,7 +9,11 @@
 ### Step 1. Installing Istio on Minikube platform
 
 ```shell
-    $ minikube start --driver=docker --kubernetes-version=v1.23.8
+    $ minikube start --driver=docker --kubernetes-version=v1.23.8 --registry-mirror=https://hub-mirror.c.163.com \
+              --registry-mirror=https://docker.mirrors.ustc.edu.cn \
+              --image-repository=registry.cn-hangzhou.aliyuncs.com/google_containers \
+              --insecure-registry=registry.cn-hangzhou.aliyuncs.com \
+              --insecure-registry=registry.k8s.io
 ```
 
 ### Step 2. install istioctl
