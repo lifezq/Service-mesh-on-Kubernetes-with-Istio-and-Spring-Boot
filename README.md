@@ -109,3 +109,66 @@ spec:
 ```text
     172.17.0.15 inventory.com
 ```
+
+## Gateway configuration
+
+### Step 1. start an external load balancer by running the following command in a different terminal
+
+```shell
+    $ minikube tunnel
+```
+
+### Step 2. Apply MetalLB manifest
+
+```shell
+    $ kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/v0.13.7/config/manifests/metallb-native.yaml
+```
+
+### Step 3. Wait until the MetalLB pods (controller and speakers) are ready
+
+```shell
+    $ kubectl wait --namespace metallb-system \
+                --for=condition=ready pod \
+                --selector=app=metallb \
+                --timeout=90s
+```
+
+### Step 4. Setup address pool used by loadbalancers
+
+#### 4.1 Check docker contain a cidr such as 172.19.0.0/16
+
+```shell
+    $ docker network inspect -f '{{.IPAM.Config}}' kind
+```
+
+#### 4.2 Create a file named metallb-config.yaml
+
+```yaml
+apiVersion: metallb.io/v1beta1
+kind: IPAddressPool
+metadata:
+  name: example
+  namespace: metallb-system
+spec:
+  addresses:
+    - 172.19.255.200-172.19.255.250
+---
+apiVersion: metallb.io/v1beta1
+kind: L2Advertisement
+metadata:
+  name: empty
+  namespace: metallb-system
+
+```
+
+```shell
+    $ kubectl apply -f metallb-config.yaml
+```
+
+### Step 5. Expose your deployment by LoadBalancer
+
+```shell
+    $ kubectl expose deployment inventory-service --type=LoadBalancer --port=80 --target-port=9020 --name=inventory-loadbalancer
+```
+
+### Step 6. Access your application through external ip
