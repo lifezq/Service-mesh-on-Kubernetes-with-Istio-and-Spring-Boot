@@ -25,6 +25,7 @@
 ### Step 3. Set namespace label
 
 ```shell
+    $ alias kubectl='minikube kubectl --'
     $ kubectl label namespace default istio-injection=enabled 
 ```
 
@@ -68,9 +69,9 @@ metadata:
 
   name: inventory-ingress
 
-  annotations:
-
-    nginx.ingress.kubernetes.io/rewrite-target: /$1
+#  annotations:
+#
+#    nginx.ingress.kubernetes.io/rewrite-target: /$1
 
 spec:
 
