@@ -23,4 +23,15 @@ public class InventoryServiceApplication {
     public String get() {
         return "This is inventory service:" + environment.getProperty("server.port");
     }
+
+    @GetMapping("/deduct")
+    public String deduct() {
+        return "This is inventory service method[deduct]:" + environment.getProperty("server.port");
+    }
+
+    @GetMapping("/increase")
+    public String increase() {
+        return "This is inventory service method[increase]:" + environment.getProperty("server.port");
+    }
+
 }
